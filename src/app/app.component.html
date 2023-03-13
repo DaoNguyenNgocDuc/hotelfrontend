@@ -1,0 +1,9 @@
+<app-main-header *ngIf="currentUser"></app-main-header>
+<app-main-sidebar *ngIf="currentUser"></app-main-sidebar>
+<div class="content-wrapper" *ngIf="currentUser">
+    <router-outlet></router-outlet>
+</div>
+<router-outlet *ngIf="!currentUser"></router-outlet>
+<app-control-sidebar *ngIf="currentUser"></app-control-sidebar>
+<app-main-footer *ngIf="currentUser"></app-main-footer>
+<notifier-container></notifier-container>

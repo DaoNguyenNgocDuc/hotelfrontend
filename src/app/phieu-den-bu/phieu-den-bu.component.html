@@ -1,0 +1,260 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Phiếu Đền Bù
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="printReport()">
+    Xuất Excel
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="print()">
+    In file
+  </button>
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Phiếu Đền Bù</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddPhieuDB(addForm)">
+            <div class="form-group">
+                <label for="id_nv">Nhân viên</label>
+                <div class="input-group">
+                  <select name="id_nv" class="form-select" id="id_nv" required ngModel>
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let nhanVien of nhanViens" value="{{nhanVien.id}}">{{nhanVien.id}}-{{nhanVien.ten_nv}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_pkt">Phiếu kiểm tra</label>
+                <div class="input-group">
+                  <select (change)="changePhieuDat(t.value)" #t name="id_pkt" class="form-select" id="id_pkt" required ngModel>
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let phieuKT of phieuKTs" value="{{phieuKT.id}}">{{phieuKT.id}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="id_pdp">Phiếu đặt phòng</label>
+              <div class="input-group">
+                <input readonly type="number" name="id_pdp" id="id_pdp" class="form-control" [value] = "phieuDatId" required [ngModel] = "phieuDatId">
+              </div>
+          </div>
+
+            <div class="form-group">
+              <label for="ngay_lap">Ngày Lập</label>
+              <div class="input-group">
+                <input type="datetime-local" name="ngay_lap" id="ngay_lap" class="form-control" required ngModel>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tien_phat">Tiền Phạt</label>
+              <div class="input-group">
+                <input type="number" id="tien_phat" name="tien_phat" class="form-control" required ngModel>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa Phiếu Đền Bù {{editPhieuDB?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id_p" class="form-control" ngModel = "{{editPhieuDB?.id}}">
+
+            <div class="form-group">
+                <label for="id_nv">Nhân viên</label>
+                <div class="input-group">
+                  <select name="id_nv" class="form-select" id="id_nv" required ngModel = "{{editPhieuDB?.id_nv}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let nhanVien of nhanViens" value="{{nhanVien.id}}">{{nhanVien.id}}-{{nhanVien.ten_nv}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_pkt">Phiếu kiểm tra</label>
+                <div class="input-group">
+                  <select (change)="changePhieuDat(s.value)" #s name="id_pkt" class="form-select" id="id_pkt" required ngModel = "{{editPhieuDB?.id_pkt}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let phieuKT of phieuKTs" value="{{phieuKT.id}}">{{phieuKT.id}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_pdp">Phiếu đặt phòng</label>
+                <div class="input-group">
+                  <input readonly type="number" name="id_pdp" id="id_pdp" class="form-control" [value]="editPhieuDB?.id_pdp" required [ngModel] = "phieuDatId">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ngay_lap">Ngày Lập</label>
+                <div class="input-group">
+                  <input type="datetime-local" name="ngay_lap" id="ngay_lap" class="form-control" required ngModel = "{{editPhieuDB?.ngay_lap}}">
+                </div>
+              </div>
+
+            <div class="form-group">
+              <label for="tien_phat">Tiền Phạt</label>
+              <div class="input-group">
+                <input type="number" id="tien_phat" name="tien_phat" class="form-control" required ngModel = "{{editPhieuDB?.tien_phat}}">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-phong" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdatePhieuDB(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chi tiết Phiếu Đền Bù {{detailPhieuDB?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #detailForm="ngForm">
+            <div class="form-group">
+              <label for="id">Id</label>
+              <div class="input-group">
+                <input disabled type="text" name="id" id="id_p" class="form-control" ngModel = "{{detailPhieuDB?.id}}">
+              </div>
+            </div>
+            
+
+            <div class="form-group">
+                <label for="id_nv">Nhân viên</label>
+                <div class="input-group">
+                  <select disabled name="id_nv" class="form-select" id="id_nv" required ngModel = "{{detailPhieuDB?.id_nv}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let nhanVien of nhanViens" value="{{nhanVien.id}}">{{nhanVien.id}}-{{nhanVien.ten_nv}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_pkt">Phiếu kiểm tra</label>
+                <div class="input-group">
+                  <select disabled (change)="changePhieuDat(s.value)" #s name="id_pkt" class="form-select" id="id_pkt" required ngModel = "{{detailPhieuDB?.id_pkt}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let phieuKT of phieuKTs" value="{{phieuKT.id}}">{{phieuKT.id}}</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_pdp">Phiếu đặt phòng</label>
+                <div class="input-group">
+                  <input disabled readonly type="number" name="id_pdp" id="id_pdp" class="form-control" [value]="detailPhieuDB?.id_pdp" required [ngModel] = "phieuDatId">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ngay_lap">Ngày Lập</label>
+                <div class="input-group">
+                  <input disabled type="datetime-local" name="ngay_lap" id="ngay_lap" class="form-control" required ngModel = "{{detailPhieuDB?.ngay_lap}}">
+                </div>
+              </div>
+
+            <div class="form-group">
+              <label for="tien_phat">Tiền Phạt</label>
+              <div class="input-group">
+                <input disabled type="number" id="tien_phat" name="tien_phat" class="form-control" required ngModel = "{{detailPhieuDB?.tien_phat}}">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Phiếu Đền Bù</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa phiếu đền bù {{deletePhieuDB?.id}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeletePhieuDB(deletePhieuDB.id)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nhân Viên</th>
+        <th>Phiếu Kiểm Tra</th>
+        <th>Phiếu Đặt Phòng</th>
+        <th>Ngày Lập</th>
+        <th>Tiền Phạt</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let phieuDB of phieuDBs">
+        <td>{{phieuDB.id}}</td>
+        <td>{{phieuDB.ten_nv}}</td>
+        <td>{{phieuDB.id_pkt}}</td>
+        <td>{{phieuDB.id_pdp}}</td>
+        <td>{{phieuDB.ngay_lap}}</td>
+        <td>{{phieuDB.tien_phat}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(phieuDB, 'detail')">
+            <i class="fa fa-search"></i>Details</button>
+          <button class="btn btn-sm btn-warning" (click)="onOpenModal(phieuDB, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(phieuDB, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

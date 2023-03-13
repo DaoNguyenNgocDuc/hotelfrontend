@@ -1,0 +1,290 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Nhân Viên
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="printReport()">
+    Xuất Excel
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="print()">
+    In file
+  </button>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Nhân Viên</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddNhanVien(addForm)">
+            <div class="form-group">
+                <label for="ten_nv">Họ Tên</label>
+                <div class="input-group">
+                  <input type="text" name="ten_nv" id="ten_nv" class="form-control" required ngModel>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_cv">Chức Vụ</label>
+                <div class="input-group">
+                    <select name="id_cv" class="form-select" id="id_cv" required ngModel>
+                    <option selected disabled value="">Chọn</option>
+                        <option *ngFor="let chucVu of chucVus" value="{{chucVu.id}}">{{chucVu.ten_cv}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ngay_sinh">Ngày Sinh</label>
+                <div class="input-group">
+                  <input type="date" id="ngay_sinh" name="ngay_sinh" class="form-control" required ngModel>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="gioi_tinh">Giới Tính</label>
+                <div class="input-group">
+                  <select name="gioi_tinh" class="form-select" id="select" required ngModel>
+                    <option selected disabled value="">Chọn</option>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-group">
+                <input type="email" id="email" name="email" class="form-control" required ngModel>
+              </div>
+            </div>
+  
+            <div class="form-group">
+                <label for="mat_khau">Mật Khẩu</label>
+                <div class="input-group">
+                  <input type="password" id="mat_khau" name="mat_khau" class="form-control" required ngModel>
+                </div>
+            </div>
+            
+            
+            <div class="modal-footer">
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa Nhân Viên {{editNhanVien?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id" class="form-control" ngModel = "{{editNhanVien?.id}}">
+
+            <div class="form-group">
+                <label for="ten_nv">Họ Tên</label>
+                <div class="input-group">
+                  <input type="text" name="ten_nv" id="ten_nv" class="form-control" required ngModel = "{{editNhanVien?.ten_nv}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_cv">Chức Vụ</label>
+                <div class="input-group">
+                    <select name="id_cv" class="form-select" id="select" required ngModel = "{{editNhanVien?.id_cv}}">
+                    <option selected disabled value="">Chọn</option>
+                        <option *ngFor="let chucVu of chucVus" value="{{chucVu.id}}">{{chucVu.ten_cv}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ngay_sinh">Ngày Sinh</label>
+                <div class="input-group">
+                  <input type="date" id="ngay_sinh" name="ngay_sinh" class="form-control" required ngModel = "{{editNhanVien?.ngay_sinh}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="gioi_tinh">Giới Tính</label>
+                <div class="input-group">
+                  <select name="gioi_tinh" class="form-select" id="select" required ngModel = "{{editNhanVien?.gioi_tinh}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-group">
+                <input type="email" id="email" name="email" class="form-control" required ngModel = "{{editNhanVien?.email}}">
+              </div>
+            </div>
+  
+            <div class="form-group">
+                <label for="mat_khau">Mật Khẩu</label>
+                <div class="input-group">
+                  <input type="password" id="mat_khau" name="mat_khau" class="form-control" required ngModel = "{{editNhanVien?.mat_khau}}">
+                </div>
+            </div>
+            
+            
+            <div class="modal-footer">
+              <button type="button" id="add-phong" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdateNhanVien(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chi tiết Nhân Viên {{detailNhanVien?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #detailForm="ngForm">
+            <div class="form-group">
+              <label for="id">Id</label>
+              <div class="input-group">
+                <input disabled type="text" name="id" id="id" class="form-control" ngModel = "{{detailNhanVien?.id}}">
+              </div>
+          </div>
+            
+
+            <div class="form-group">
+                <label for="ten_nv">Họ Tên</label>
+                <div class="input-group">
+                  <input disabled type="text" name="ten_nv" id="ten_nv" class="form-control" required ngModel = "{{detailNhanVien?.ten_nv}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_cv">Chức Vụ</label>
+                <div class="input-group">
+                    <select disabled name="id_cv" class="form-select" id="select" required ngModel = "{{detailNhanVien?.id_cv}}">
+                    <option selected disabled value="">Chọn</option>
+                        <option *ngFor="let chucVu of chucVus" value="{{chucVu.id}}">{{chucVu.ten_cv}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="ngay_sinh">Ngày Sinh</label>
+                <div class="input-group">
+                  <input disabled type="date" id="ngay_sinh" name="ngay_sinh" class="form-control" required ngModel = "{{detailNhanVien?.ngay_sinh}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="gioi_tinh">Giới Tính</label>
+                <div class="input-group">
+                  <select disabled name="gioi_tinh" class="form-select" id="select" required ngModel = "{{detailNhanVien?.gioi_tinh}}">
+                    <option selected disabled value="">Chọn</option>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-group">
+                <input disabled type="email" id="email" name="email" class="form-control" required ngModel = "{{detailNhanVien?.email}}">
+              </div>
+            </div>
+  
+            <div class="form-group">
+                <label for="mat_khau">Mật Khẩu</label>
+                <div class="input-group">
+                  <input disabled type="password" id="mat_khau" name="mat_khau" class="form-control" required ngModel = "{{detailNhanVien?.mat_khau}}">
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Nhân Viên</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa nhân viên {{deleteNhanVien?.id}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeleteNhanVien(deleteNhanVien.id)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Họ Tên</th>
+        <th>Chức Vụ</th>
+        <th>Giới Tính</th>
+        <th>Ngày Sinh</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let nhanVien of nhanViens">
+        <td>{{nhanVien.id}}</td>
+        <td>{{nhanVien.ten_nv}}</td>
+        <td>{{nhanVien.ten_cv}}</td>
+        <td>{{nhanVien.gioi_tinh}}</td>
+        <td>{{nhanVien.ngay_sinh}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(nhanVien, 'detail')">
+            <i class="fa fa-search"></i>Details</button>
+          <button class="btn btn-sm btn-warning" (click)="onOpenModal(nhanVien, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(nhanVien, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+

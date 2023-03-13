@@ -1,0 +1,165 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Chi Tiết
+  </button>
+
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Chi Tiết Phiếu Đặt Phòng</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddCtpdp(addForm)">
+            <div class="form-group">
+              <label for="id_pdp">Phiếu Đặt Phòng</label>
+              <div class="input-group">
+                <select name="id_pdp" class="form-select" id="id_pdp" required ngModel>
+                  <option selected disabled value="">Chọn</option>
+                    <option *ngFor="let phieuDat of phieuDats" value="{{phieuDat.id}}">{{phieuDat.id}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_p">Phòng</label>
+                <div class="input-group">
+                  <select name="id_p" class="form-select" id="id_p" required ngModel>
+                    <option selected disabled value="">Chọn</option>
+                      <option *ngFor="let phong of phongs" value="{{phong.id}}">{{phong.id}}:{{phong.ten_lp}}</option>
+                  </select>
+                </div>
+            </div>
+            <div class="modal-footer">  
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa Chi tiết {{editCtpdp?.id_pdp}}-{{editCtpdp?.id_p}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id_p" class="form-control" ngModel = "{{editCtpdp?.id_pdp}}">
+
+              <div class="form-group">
+                  <label for="id_p">Phòng</label>
+                  <div class="input-group">
+                    <select name="id_p" class="form-select" id="id_p" required ngModel = "{{editCtpdp?.id_p}}">
+                      <option selected disabled value="">Chọn</option>
+                        <option *ngFor="let phong of phongs" ngModel = "{{phong.id}}" value="{{phong.id}}">{{phong.id}}:{{phong.ten_lp}}</option>
+                    </select>
+                  </div>
+              </div>
+            <div class="modal-footer">
+              <button type="button" id="add-phong" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdateCtpdp(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Xem Chi tiết {{detailCtpdp?.id_pdp}}-{{detailCtpdp?.id_p}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #detailForm="ngForm">
+            <div class="form-group">
+              <label for="id_pdp">Phiếu đặt phòng</label>
+              <div class="input-group">
+                <input disabled type="text" name="id_pdp" id="id_p" class="form-control" ngModel = "{{detailCtpdp?.id_pdp}}">
+              </div>
+          </div>
+
+              <div class="form-group">
+                  <label for="id_p">Phòng</label>
+                  <div class="input-group">
+                    <select disabled name="id_p" class="form-select" id="id_p" required ngModel = "{{detailCtpdp?.id_p}}">
+                      <option selected disabled value="">Chọn</option>
+                        <option *ngFor="let phong of phongs" ngModel = "{{phong.id}}" value="{{phong.id}}">{{phong.id}}:{{phong.ten_lp}}</option>
+                    </select>
+                  </div>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Chi tiết</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa chi tiết {{deleteCtpdp?.id_pdp}}-{{deleteCtpdp?.id_p}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeleteCtpdp(deleteCtpdp.id_pdp,deleteCtpdp.id_p)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Phiếu Đặt Phòng</th>
+        <th>Phòng</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ctpdp of ctpdps">
+        <td>{{ctpdp.id_pdp}}</td>
+        <td>{{ctpdp.id_p}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(ctpdp, 'detail')"> 
+            <i class="fa fa-search"></i>Details</button>
+          <!-- <button class="btn btn-sm btn-warning" (click)="onOpenModal(ctpdp, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button> -->
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(ctpdp, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+

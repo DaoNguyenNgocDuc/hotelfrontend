@@ -1,0 +1,30 @@
+
+
+.border{
+    padding: 10px;
+  }
+  .btn{
+    margin-right: 10px;
+  }
+  .fa {
+    margin-right: 10px;
+  }
+
+  table .btn{
+    margin: 2px;
+  }
+
+.modal-backdrop {
+  z-index: -1;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #6c757d inset !important;
+}
+
+.login-box {
+  margin: 0 auto;
+}

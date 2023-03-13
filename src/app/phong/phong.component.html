@@ -1,0 +1,262 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Phòng
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="printReport()">
+    Xuất Excel
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="print()">
+    In file
+  </button>
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Phòng</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddPhong(addForm)">
+            <div class="form-group">
+              <label for="so_nguoi">Loại Phòng</label>
+              <div class="input-group">
+                <select name="id_lp" class="form-select" id="select" required ngModel>
+                  <option selected disabled value="">Chọn</option>
+                    <option *ngFor="let loaiPhong of loaiPhongs" value="{{loaiPhong.id}}">{{loaiPhong.ten_lp}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_phong">Số phòng</label>
+              <div class="input-group">
+                <input type="number" name="so_phong" id="so_phong" class="form-control" required ngModel>
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label for="so_nguoi">Số người</label>
+              <div class="input-group">
+                <input type="number" name="so_nguoi" id="so_nguoi" class="form-control" required ngModel>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="don_gia">Đơn giá</label>
+              <div class="input-group">
+                <input type="number" id="don_gia" name="don_gia" class="form-control" required ngModel>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tinh_trang">Tình Trạng</label>
+              <div class="input-group">
+                <select name="tinh_trang" class="form-select" id="select" required ngModel>
+                  <option selected disabled value="">Chọn</option>
+                    <option value=0>Đã Thuê</option>
+                    <option value=1>Trống</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa Phòng {{editPhong?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id_p" class="form-control" ngModel = "{{editPhong?.id}}">
+
+            <div class="form-group">
+              <label for="so_nguoi">Loại Phòng</label>
+              <div class="input-group">
+                <select name="id_lp" class="form-select" id="select" required ngModel = "{{editPhong?.id_lp}}">
+                  <option disabled value="">Chọn</option>
+                    <option *ngFor="let loaiPhong of loaiPhongs" value="{{loaiPhong.id}}" [selected]="loaiPhong.id == editPhong?.id_lp" >{{loaiPhong.ten_lp}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_phong">Số Phòng</label>
+              <div class="input-group">
+                <input type="number" name="so_phong" id="so_phong" class="form-control" required ngModel = "{{editPhong?.so_phong}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_nguoi">Số Người</label>
+              <div class="input-group">
+                <input type="number" name="so_nguoi" id="so_nguoi" class="form-control" required ngModel = "{{editPhong?.so_nguoi}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="don_gia">Đơn Giá</label>
+              <div class="input-group">
+                <input type="number" id="don_gia" name="don_gia" class="form-control" required ngModel = "{{editPhong?.don_gia}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tinh_trang">Tình Trạng</label>
+              <div class="input-group">
+                <select name="tinh_trang" class="form-select" id="select" required ngModel = "{{editPhong?.tinh_trang}}">
+                  <option selected disabled value="">Chọn</option>
+                    <option value=0>Đã Thuê</option>
+                    <option value=1>Trống</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-phong" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdatePhong(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chi tiết Phòng {{detailPhong?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <div class="form-group">
+              <label for="id">Id</label>
+              <div class="input-group">
+                <input disabled type="number" name="id" id="id" class="form-control" required ngModel = "{{detailPhong?.id}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_nguoi">Loại Phòng</label>
+              <div class="input-group">
+                <select disabled name="id_lp" class="form-select" id="select" required ngModel = "{{detailPhong?.id_lp}}">
+                  <option disabled value="">Chọn</option>
+                    <option *ngFor="let loaiPhong of loaiPhongs" value="{{loaiPhong.id}}" [selected]="loaiPhong.id == detailPhong?.id_lp" >{{loaiPhong.ten_lp}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_phong">Số Phòng</label>
+              <div class="input-group">
+                <input disabled type="number" name="so_phong" id="so_phong" class="form-control" required ngModel = "{{detailPhong?.so_phong}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="so_nguoi">Số Người</label>
+              <div class="input-group">
+                <input disabled type="number" name="so_nguoi" id="so_nguoi" class="form-control" required ngModel = "{{detailPhong?.so_nguoi}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="don_gia">Đơn Giá</label>
+              <div class="input-group">
+                <input disabled type="number" id="don_gia" name="don_gia" class="form-control" required ngModel = "{{detailPhong?.don_gia}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="tinh_trang">Tình Trạng</label>
+              <div class="input-group">
+                <select disabled name="tinh_trang" class="form-select" id="select" required ngModel = "{{detailPhong?.tinh_trang}}">
+                  <option selected disabled value="">Chọn</option>
+                    <option value=0>Đã Thuê</option>
+                    <option value=1>Trống</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Phòng</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa phòng {{deletePhong?.id}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeletePhong(deletePhong.id)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Loại Phòng</th>
+        <th>Số Phòng</th>
+        <th>Số Người</th>
+        <th>Đơn Giá</th>
+        <th>Tình Trạng</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let phong of phongs">
+        <td>{{phong.id}}</td>
+        <td>{{phong.ten_lp}}</td>
+        <td>{{phong.so_phong}}</td>
+        <td>{{phong.so_nguoi}}</td>
+        <td>{{phong.don_gia}}</td>
+        <td>{{phong.tinh_trang==1?'Trống':'Đã Thuê'}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(phong, 'detail')">
+            <i class="fa fa-search"></i>Details</button>
+          <button class="btn btn-sm btn-warning" (click)="onOpenModal(phong, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(phong, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>

@@ -1,0 +1,154 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Loại Thanh Toán
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="printReport()">
+    Xuất Excel
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="print()">
+    In file
+  </button>
+  
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Loại Thanh Toán</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddLoaiThanhToan(addForm)">
+
+            <div class="form-group">
+              <label for="ten_ltt">Tên loại thanh toán</label>
+              <div class="input-group">
+                <input type="text" name="ten_ltt" id="ten_ltt" class="form-control" required ngModel>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa loại thanh toán {{editLoaiThanhToan?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id_p" class="form-control" ngModel = "{{editLoaiThanhToan?.id}}">
+
+            <div class="form-group">
+                <label for="ten_ltt">Tên loại thanh toán</label>
+                <div class="input-group">
+                  <input type="text" name="ten_ltt" id="ten_ltt" class="form-control" required ngModel = "{{editLoaiThanhToan?.ten_ltt}}">
+                </div>
+              </div>
+            <div class="modal-footer">
+              <button type="button" id="add-phong" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdateLoaiThanhToan(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chi tiết loại thanh toán {{detailLoaiThanhToan?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <div class="form-group">
+              <label for="id">Id</label>
+              <div class="input-group">
+                <input disabled type="text" name="id" id="id" class="form-control" ngModel = "{{detailLoaiThanhToan?.id}}">
+              </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="ten_ltt">Tên loại thanh toán</label>
+                <div class="input-group">
+                  <input disabled type="text" name="ten_ltt" id="ten_ltt" class="form-control" required ngModel = "{{detailLoaiThanhToan?.ten_ltt}}">
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Loại Thanh Toán</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa loại thanh toán {{deleteLoaiThanhToan?.id}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeleteLoaiThanhToan(deleteLoaiThanhToan.id)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Loại Thanh Toán</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let loaiThanhToan of loaiThanhToans">
+        <td>{{loaiThanhToan.id}}</td>
+        <td>{{loaiThanhToan.ten_ltt}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(loaiThanhToan, 'detail')">
+            <i class="fa fa-search"></i>Details</button>
+          <button class="btn btn-sm btn-warning" (click)="onOpenModal(loaiThanhToan, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(loaiThanhToan, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+

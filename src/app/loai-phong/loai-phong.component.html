@@ -1,0 +1,177 @@
+<br />
+<div class="container" id="main-container">
+  <!-- Button trigger modal -->
+  <button type="button" id="modalbutton" class="btn btn-primary" (click)="onOpenModal(null!, 'add')" data-toggle="modal" data-target="addModal">
+    Thêm Loại Phòng
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="printReport()">
+    Xuất Excel
+  </button>
+  <button type="button" id="excelbutton" class="btn btn-primary" (click)="print()">
+    In file
+  </button>
+  <!-- Add Modal -->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Thêm Loại Phòng</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddLoaiPhong(addForm)">
+            <div class="form-group">
+              <label for="ten_lp">Tên Loại Phòng</label>
+              <div class="input-group">
+                <input type="text" name="ten_lp" id="ten_lp" class="form-control" required ngModel>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="mo_ta">Mô Tả</label>
+              <div class="input-group">
+                <input type="text" id="mo_ta" name="mo_ta" class="form-control" required ngModel>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sửa Loại Phòng {{editLoaiPhong?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" name="id" id="id" class="form-control" ngModel = "{{editLoaiPhong?.id}}">
+
+            <div class="form-group">
+              <label for="ten_lp">Tên Loại Phòng</label>
+              <div class="input-group">
+                <input type="text" name="ten_lp" id="ten_lp" class="form-control" required ngModel = "{{editLoaiPhong?.ten_lp}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="mo_ta">Mô Tả</label>
+              <div class="input-group">
+                <input type="text" id="mo_ta" name="mo_ta" class="form-control" required ngModel = "{{editLoaiPhong?.mo_ta}}">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="update-lp" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" (click)="onUpdateLoaiPhong(editForm.value)" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Chi tiết Loại Phòng {{detailLoaiPhong?.id}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #detailForm="ngForm">
+            <div class="form-group">
+              <label for="id">Id</label>
+              <div class="input-group">
+                <input disabled type="text" name="id" id="id" class="form-control" ngModel = "{{detailLoaiPhong?.id}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ten_lp">Tên Loại Phòng</label>
+              <div class="input-group">
+                <input disabled type="text" name="ten_lp" id="ten_lp" class="form-control" required ngModel = "{{detailLoaiPhong?.ten_lp}}">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="mo_ta">Mô Tả</label>
+              <div class="input-group">
+                <input disabled type="text" id="mo_ta" name="mo_ta" class="form-control" required ngModel = "{{detailLoaiPhong?.mo_ta}}">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa Loại Phòng</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa loại phòng {{deleteLoaiPhong?.id}} không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="delete-close" class="btn btn-secondary" data-dismiss="modal">Không</button>
+        <button (click)="onDeletePhong(deleteLoaiPhong.id)" type="button" class="btn btn-primary">Có</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <table id="datatable" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tên Loại Phòng</th>
+        <th>Mô tả</th>
+        <th>Hành Động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let loaiPhong of loaiPhongs">
+        <td>{{loaiPhong.id}}</td>
+        <td>{{loaiPhong.ten_lp}}</td>
+        <td>{{loaiPhong.mo_ta}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" (click)="onOpenModal(loaiPhong, 'detail')">
+            <i class="fa fa-search"></i>Details</button>
+          <button class="btn btn-sm btn-warning" (click)="onOpenModal(loaiPhong, 'edit')">
+            <i class="fa fa-edit"></i>Edit</button>
+          <button class="btn btn-sm btn-danger" (click)="onOpenModal(loaiPhong, 'delete')">
+            <i class="fa fa-remove"></i>Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+
